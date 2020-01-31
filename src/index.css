@@ -1,9 +1,12 @@
 body {
   text-align: center;
+  background-color: #181b1d;
   font-family: 'Open Sans', sans-serif;
-  color: #3f4850;
+  color: #5e6973;
 }
-
+h1 {
+  margin: 0 auto;
+}
 h2 {
   font-size: 2em;
   margin: 52px 0 40px;
