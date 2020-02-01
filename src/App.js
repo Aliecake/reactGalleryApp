@@ -2,8 +2,7 @@ import React, { Component, Fragment } from 'react';
 import {
   BrowserRouter,
   Route,
-  Switch,
-  useLocation
+  Switch
 } from 'react-router-dom'
 import Flickr from 'flickr-sdk';
 import config from './config';
@@ -18,13 +17,6 @@ class App extends Component {
   state = {
     photo_id: [],
     loading: true
-  }
-
-  locationGet = () => {
-    const location = useLocation()
-    React.useEffect(() => {
-      console.log(location.pathname)
-    })
   }
 
   searchForPhotos = (query = 'cute animals') => {
@@ -50,7 +42,8 @@ class App extends Component {
   }
   //load photos on first arrival
   componentDidMount(){
-    this.searchForPhotos(`puppy`)
+    this.searchForPhotos()
+
   }
 
   render() {
