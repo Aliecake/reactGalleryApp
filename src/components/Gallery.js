@@ -24,7 +24,7 @@ class Gallery extends Component {
         }
 
     }
-    componentWillUpdate() {
+    componentDidMount() {
         //to get search from URL bar changes
         //POP means it wasnt pushed onto history, pathname is not /, and if search isnt done via clicking links or searchForm
         if(this.props.history.action === "POP" && this.props.history.location.pathname.length > 1 && this.state.naturalSearch) {
@@ -42,11 +42,11 @@ class Gallery extends Component {
         return (
             <div className="photo-container">
                 <h2>Results</h2>
-                    <ul>
+                <ul>
                     { this.doPhotosExist() }
-                    </ul>
-                
+                </ul>
             </div>
+
         )
     }
 

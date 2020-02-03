@@ -21,7 +21,10 @@ class App extends Component {
 
   searchForPhotos = (query = 'cute animals') => {
     //API key from config
-    const flickr = new Flickr(config.API_KEY)
+    const flickr = new Flickr(
+      config.API_KEY,
+      config.SECRET
+      )
 
     //search photos for text query from SearchForm
     flickr.photos.search({
@@ -49,33 +52,34 @@ class App extends Component {
   render() {
     
     return (
+      <Fragment>
       <BrowserRouter>
-        <div className="App">
-          
-          
-          <Switch>
-            {/* HOME PATH */}
-            <Route exact path="/"  render={(props) => 
-            <Fragment>
-              <SearchForm { ...props } searchFor={this.searchForPhotos}/>
-              <Nav displayResults={this.searchForPhotos} />
-              <Gallery { ...props } photo_info={this.state.photo_id[0]} displayResults={this.searchForPhotos} loading={ this.state.loading } /> 
-            </Fragment>
+       
+       <Nav displayResults={this.searchForPhotos} />
+           <Switch>
+             {/* HOME PATH */}
+             <Route exact path="/"  render={(props) => 
+             <Fragment>
+               <SearchForm { ...props } searchFor={this.searchForPhotos}/>
+               <Gallery { ...props } photo_info={this.state.photo_id[0]} displayResults={this.searchForPhotos} loading={ this.state.loading } /> 
+             </Fragment>
+ 
+             } />
+             {/* QUERY PATH */}
+             <Route path="/search/:query" render={(props) =>
+               <Fragment>
+                 <SearchForm { ...props } searchFor={this.searchForPhotos}/>
+                 <Gallery { ...props } displayResults={this.searchForPhotos} photo_info={ this.state.photo_id[0] } loading={ this.state.loading } /> 
+               </Fragment>
+             }/>
+             {/* 404 PATH */}
+             <Route path="*" component= { NotFound }/>
+           </Switch>
+        
+       </BrowserRouter>
+      </Fragment>
 
-            } />
-            {/* QUERY PATH */}
-            <Route path="/search/:query" render={(props) =>
-              <Fragment>
-                <SearchForm { ...props } searchFor={this.searchForPhotos}/>
-                <Nav displayResults={this.searchForPhotos} />
-                <Gallery { ...props } displayResults={this.searchForPhotos} photo_info={ this.state.photo_id[0] } loading={ this.state.loading } /> 
-              </Fragment>
-            }/>
-            {/* 404 PATH */}
-            <Route path="*" component= { NotFound }/>
-          </Switch>
-        </div>
-      </BrowserRouter>
+ 
   
     );
   }

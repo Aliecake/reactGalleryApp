@@ -19,6 +19,7 @@ class SearchForm extends Component {
         e.currentTarget.reset();
         
     }
+    
     search = (query)=> {
         this.props.searchFor(query);
     }
