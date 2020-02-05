@@ -4,7 +4,7 @@ import {
   Route,
   Switch
 } from 'react-router-dom'
-import Flickr from 'flickr-sdk';
+import axios from 'axios';
 import config from './config';
 import Nav from './components/Nav';
 import SearchForm from './components/SearchForm';
@@ -15,38 +15,45 @@ import '../src/index.css';
 
 class App extends Component {
   state = {
-    photo_id: [],
+    photos: [],
     loading: true
   }
 
-  searchForPhotos = (query = 'cute animals') => {
-    //API key from config
-    const flickr = new Flickr(
-      config.API_KEY,
-      config.SECRET
-      )
+  searchForPhotos = (query = 'pelican') => {
 
-    //search photos for text query from SearchForm
-    flickr.photos.search({
-      text: query,
-      page: 1,
-      per_page: 24
+    const flickrURL = `https://www.flickr.com/services/rest/?method=flickr.photos.search&api_key=${config.API_KEY}&text=${query}&per_page=24&page=1&format=json&nojsoncallback=1`
+
+    //reset state so loading will show in between search
+    this.setState({
+      photos: [],
+      loading: true
     })
-      .then(res => {
-        const newArray = []
-        newArray.push(res.body)
-        this.setState({
-          photo_id: newArray,
-          loading: false
+
+    //switched from flickr-sdk to axios
+      axios.get(flickrURL)
+        .then(res => {
+          const newArray = []
+          newArray.push(res.data.photos.photo)
+
+          if (newArray[0].length === 0){
+            this.setState({
+              photos: newArray,
+              loading: false
+            })  
+          } else {
+            //reset to true
+            this.setState({
+              photos: newArray,
+              loading: true
+            })
+          }
         })
-      })
-      .catch(err => console.log(`There was an error fetching`, err))
-    
+        .catch(err => console.log(err))
   }
   //load photos on first arrival
-  componentDidMount(){
-    this.searchForPhotos()
+  componentDidMount() {
 
+    this.searchForPhotos()
   }
 
   render() {
@@ -61,7 +68,7 @@ class App extends Component {
              <Route exact path="/"  render={(props) => 
              <Fragment>
                <SearchForm { ...props } searchFor={this.searchForPhotos}/>
-               <Gallery { ...props } photo_info={this.state.photo_id[0]} displayResults={this.searchForPhotos} loading={ this.state.loading } /> 
+               <Gallery { ...props } photo_info={this.state.photos[0]} displayResults={this.searchForPhotos} loading={ this.state.loading } /> 
              </Fragment>
  
              } />
@@ -69,7 +76,7 @@ class App extends Component {
              <Route path="/search/:query" render={(props) =>
                <Fragment>
                  <SearchForm { ...props } searchFor={this.searchForPhotos}/>
-                 <Gallery { ...props } displayResults={this.searchForPhotos} photo_info={ this.state.photo_id[0] } loading={ this.state.loading } /> 
+                 <Gallery { ...props } displayResults={this.searchForPhotos} photo_info={ this.state.photos[0] } loading={ this.state.loading } /> 
                </Fragment>
              }/>
              {/* 404 PATH */}

@@ -7,22 +7,24 @@ class Gallery extends Component {
     state = {
         naturalSearch: true
     }
-
+    loadingResponse() {
+        return <NoResults loading={this.props.loading} />
+    }
     doPhotosExist = () => {
         let photo_info = this.props.photo_info
-  
+
         // Check if props exist, and if so that there are results
-        if (photo_info && photo_info.photos.total > 0) {
+        if (photo_info && photo_info.length > 0) {
             let photos_result;
-            photos_result = photo_info.photos.photo.map((photo, index) => {
-                return <Photo photo_info={ photo_info.photos.photo[index] } key={ photo_info.photos.photo[index].id }/>
-                
+    
+            photos_result = photo_info.map(photo => {
+                 return <Photo photo_info={ photo } key={ photo.id }/>
             })
+
             return photos_result
         } else {
-            return <NoResults loading={this.props.loading} />
+            return this.loadingResponse()
         }
-
     }
     componentDidMount() {
         //to get search from URL bar changes
@@ -43,6 +45,7 @@ class Gallery extends Component {
             <div className="photo-container">
                 <h2>Results</h2>
                 <ul>
+           
                     { this.doPhotosExist() }
                 </ul>
             </div>
