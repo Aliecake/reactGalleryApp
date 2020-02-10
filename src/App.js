@@ -16,7 +16,41 @@ import '../src/index.css';
 class App extends Component {
   state = {
     photos: [],
+    cats: [],
+    memes: [],
+    dogs: [],
     loading: true
+  }
+
+  navSearch = (navTerm) => {
+
+    const flickrURL = `https://www.flickr.com/services/rest/?method=flickr.photos.search&api_key=${config.API_KEY}&text=${navTerm}&per_page=24&page=1&format=json&nojsoncallback=1`
+
+    //switched from flickr-sdk to axios
+      axios.get(flickrURL)
+        .then(res => {
+          const newArray = []
+
+          if(res.data.photos){
+            newArray.push(res.data.photos.photo)
+          }
+          
+
+          if (newArray[0].length === 0){
+            this.setState({
+              [`${navTerm}`]: newArray,
+              loading: false
+            })  
+          } else {
+            console.log(this.state.cats)
+            //reset to true
+            this.setState({
+              [`${navTerm}`]: newArray,
+              loading: true
+            })
+          }
+        })
+        .catch(err => console.log(err))
   }
 
   searchForPhotos = (query = 'pelican') => {
@@ -33,7 +67,13 @@ class App extends Component {
       axios.get(flickrURL)
         .then(res => {
           const newArray = []
-          newArray.push(res.data.photos.photo)
+
+          console.log('App.js 36', res.data)
+
+          if(res.data.photos){
+            newArray.push(res.data.photos.photo)
+          }
+          
 
           if (newArray[0].length === 0){
             this.setState({
@@ -54,6 +94,7 @@ class App extends Component {
   componentDidMount() {
 
     this.searchForPhotos()
+
   }
 
   render() {
@@ -62,16 +103,25 @@ class App extends Component {
       <Fragment>
       <BrowserRouter>
        
-       <Nav displayResults={this.searchForPhotos} />
+       <Nav />
            <Switch>
              {/* HOME PATH */}
              <Route exact path="/"  render={(props) => 
              <Fragment>
                <SearchForm { ...props } searchFor={this.searchForPhotos}/>
-               <Gallery { ...props } photo_info={this.state.photos[0]} displayResults={this.searchForPhotos} loading={ this.state.loading } /> 
+               <Gallery { ...props } photo_info={this.state.photos[0]} displayResults={this.searchForPhotos} loading={ this.state.loading } navSearch={`NONE`}/> 
              </Fragment>
  
              } />
+             
+            {/* NAV PATHS */}
+             <Route path="/search/cats" render={(props) =>
+               <Fragment>
+                 <SearchForm { ...props } searchFor={this.searchForPhotos}/>
+                 <Gallery { ...props } displayResults={this.searchForPhotos} photo_info={ this.state.cats } loading={ this.state.loading } navSearch={`cats`} /> 
+               </Fragment>
+             }/>
+             
              {/* QUERY PATH */}
              <Route path="/search/:query" render={(props) =>
                <Fragment>
@@ -79,6 +129,8 @@ class App extends Component {
                  <Gallery { ...props } displayResults={this.searchForPhotos} photo_info={ this.state.photos[0] } loading={ this.state.loading } /> 
                </Fragment>
              }/>
+
+
              {/* 404 PATH */}
              <Route path="*" component= { NotFound }/>
            </Switch>
