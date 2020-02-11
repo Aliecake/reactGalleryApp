@@ -135,7 +135,7 @@ class App extends Component {
 
                  <SearchForm { ...props } searchFor={this.searchForPhotos}/>
                  <Gallery { ...props }
-                    displayResults={this.searchForPhotos}
+               
                     photo_info={ this.state.cat[0] }
                     loading={ this.state.loading }
                     clicked={this.state.clicked}
@@ -148,7 +148,7 @@ class App extends Component {
 
                  <SearchForm { ...props } searchFor={this.searchForPhotos}/>
                  <Gallery { ...props }
-                    displayResults={this.searchForPhotos}
+               
                     photo_info={ this.state.dog[0] }
                     loading={ this.state.loading }
                     clicked={this.state.clicked}
@@ -162,7 +162,7 @@ class App extends Component {
 
                  <SearchForm { ...props } searchFor={this.searchForPhotos}/>
                  <Gallery { ...props }
-                    displayResults={this.searchForPhotos}
+                
                     photo_info={ this.state.train[0] }
                     loading={ this.state.loading }
                     clicked={this.state.clicked}
