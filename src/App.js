@@ -24,7 +24,7 @@ class App extends Component {
   }
 
   navSearch = (navTerm) => {
-    const flickrURL = `https://www.flickr.com/services/rest/?method=flickr.photos.search&api_key=${config.API_KEY}&text=${navTerm}&per_page=24&page=1&format=json&nojsoncallback=1`
+    const flickrURL = `https://www.flickr.com/services/rest/?method=flickr.photos.search&api_key=${config.API_KEY}&text=${navTerm}&safe_search=1&per_page=24&page=1&format=json&nojsoncallback=1`
 
     //switched from flickr-sdk to axios
       axios.get(flickrURL)
