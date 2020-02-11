@@ -4,14 +4,14 @@ import Photo from './Photo'
 import NoResults from './NoResults'
 
 class Gallery extends Component {
-    state ={
-        navSearch: this.props.navSearch
+    state = {
+        clicked: this.props.clicked
     }
     loadingResponse() {
         return <NoResults loading={this.props.loading} />
     }
     doPhotosExist = () => {
-        
+
         let photo_info = this.props.photo_info
         // console.log(`GALLERY`, photo_info)
         // Check if props exist, and if so that there are results
@@ -29,10 +29,6 @@ class Gallery extends Component {
     }
     componentDidMount() {
         //to get search from URL bar changes
-        console.log(`mounted`)
-        console.log(this.props.history)
-        console.log(this.props.navSearch)
-   
         //this.props.history.action === "POP" && 
         //pathname is not /, and if search isnt done via clicking links or searchForm
         if(this.props.history.location.pathname.length > 1) {

@@ -16,14 +16,14 @@ import '../src/index.css';
 class App extends Component {
   state = {
     photos: [],
-    cats: [],
-    memes: [],
-    dogs: [],
+    cat: [],
+    meme: [],
+    train: [],
+    clicked: false,
     loading: true
   }
 
   navSearch = (navTerm) => {
-
     const flickrURL = `https://www.flickr.com/services/rest/?method=flickr.photos.search&api_key=${config.API_KEY}&text=${navTerm}&per_page=24&page=1&format=json&nojsoncallback=1`
 
     //switched from flickr-sdk to axios
@@ -34,15 +34,14 @@ class App extends Component {
           if(res.data.photos){
             newArray.push(res.data.photos.photo)
           }
-          
-
+        
           if (newArray[0].length === 0){
+     
             this.setState({
               [`${navTerm}`]: newArray,
               loading: false
             })  
           } else {
-            console.log(this.state.cats)
             //reset to true
             this.setState({
               [`${navTerm}`]: newArray,
@@ -55,7 +54,7 @@ class App extends Component {
 
   searchForPhotos = (query = 'pelican') => {
 
-    const flickrURL = `https://www.flickr.com/services/rest/?method=flickr.photos.search&api_key=${config.API_KEY}&text=${query}&per_page=24&page=1&format=json&nojsoncallback=1`
+    const flickrURL = `https://www.flickr.com/services/rest/?method=flickr.photos.search&api_key=${config.API_KEY}&text=${query}&safe_search=1&per_page=24&page=1&format=json&nojsoncallback=1`
 
     //reset state so loading will show in between search
     this.setState({
@@ -67,8 +66,6 @@ class App extends Component {
       axios.get(flickrURL)
         .then(res => {
           const newArray = []
-
-          console.log('App.js 36', res.data)
 
           if(res.data.photos){
             newArray.push(res.data.photos.photo)
@@ -90,10 +87,19 @@ class App extends Component {
         })
         .catch(err => console.log(err))
   }
+  navClicked = () => {
+   
+    this.setState({
+        clicked: !this.state.clicked
+    }) 
+  }
   //load photos on first arrival
   componentDidMount() {
 
     this.searchForPhotos()
+    this.navSearch(`cat`)
+    this.navSearch(`dog`)
+    this.navSearch(`train`)
 
   }
 
@@ -103,13 +109,19 @@ class App extends Component {
       <Fragment>
       <BrowserRouter>
        
-       <Nav />
+       <Nav navClicked={this.navClicked}/>
            <Switch>
              {/* HOME PATH */}
              <Route exact path="/"  render={(props) => 
              <Fragment>
+
                <SearchForm { ...props } searchFor={this.searchForPhotos}/>
-               <Gallery { ...props } photo_info={this.state.photos[0]} displayResults={this.searchForPhotos} loading={ this.state.loading } navSearch={`NONE`}/> 
+               <Gallery { ...props }
+                  photo_info={this.state.photos[0]}
+                  displayResults={this.searchForPhotos}
+                  loading={ this.state.loading }
+                  clicked={this.state.clicked} 
+              /> 
              </Fragment>
  
              } />
@@ -117,16 +129,57 @@ class App extends Component {
             {/* NAV PATHS */}
              <Route path="/search/cats" render={(props) =>
                <Fragment>
+
                  <SearchForm { ...props } searchFor={this.searchForPhotos}/>
-                 <Gallery { ...props } displayResults={this.searchForPhotos} photo_info={ this.state.cats } loading={ this.state.loading } navSearch={`cats`} /> 
+                 <Gallery { ...props }
+                    displayResults={this.searchForPhotos}
+                    photo_info={ this.state.cat[0] }
+                    loading={ this.state.loading }
+                    clicked={this.state.clicked}
+                /> 
+
+               </Fragment>
+             }/>
+              <Route path="/search/dogs" render={(props) =>
+               <Fragment>
+
+                 <SearchForm { ...props } searchFor={this.searchForPhotos}/>
+                 <Gallery { ...props }
+                    displayResults={this.searchForPhotos}
+                    photo_info={ this.state.dog[0] }
+                    loading={ this.state.loading }
+                    clicked={this.state.clicked}
+                /> 
+
+               </Fragment>
+             }/>
+
+              <Route path="/search/trains" render={(props) =>
+               <Fragment>
+
+                 <SearchForm { ...props } searchFor={this.searchForPhotos}/>
+                 <Gallery { ...props }
+                    displayResults={this.searchForPhotos}
+                    photo_info={ this.state.train[0] }
+                    loading={ this.state.loading }
+                    clicked={this.state.clicked}
+                /> 
+
                </Fragment>
              }/>
              
              {/* QUERY PATH */}
              <Route path="/search/:query" render={(props) =>
                <Fragment>
+
                  <SearchForm { ...props } searchFor={this.searchForPhotos}/>
-                 <Gallery { ...props } displayResults={this.searchForPhotos} photo_info={ this.state.photos[0] } loading={ this.state.loading } /> 
+                 <Gallery { ...props }
+                    displayResults={this.searchForPhotos}
+                    photo_info={ this.state.photos[0] }
+                    loading={ this.state.loading }
+                    clicked={this.state.clicked}
+                /> 
+
                </Fragment>
              }/>
 
