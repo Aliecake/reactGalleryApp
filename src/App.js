@@ -19,6 +19,7 @@ class App extends Component {
     cat: [],
     meme: [],
     train: [],
+    //update state so gallery reloads
     clicked: false,
     loading: true
   }
@@ -90,6 +91,7 @@ class App extends Component {
   navClicked = () => {
    
     this.setState({
+      //on/off state
         clicked: !this.state.clicked
     }) 
   }
@@ -97,6 +99,7 @@ class App extends Component {
   componentDidMount() {
 
     this.searchForPhotos()
+    //nav calls only happen once to API
     this.navSearch(`cat`)
     this.navSearch(`dog`)
     this.navSearch(`train`)
@@ -168,7 +171,7 @@ class App extends Component {
                </Fragment>
              }/>
              
-             {/* QUERY PATH */}
+             {/* QUERY/SEARCH PATH */}
              <Route path="/search/:query" render={(props) =>
                <Fragment>
 

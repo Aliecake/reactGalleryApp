@@ -28,8 +28,8 @@ class Gallery extends Component {
         }
     }
     componentDidMount() {
-        //to get search from URL bar changes
-        //this.props.history.action === "POP" && 
+        //search from URL bar changes
+
         //pathname is not /, and if search isnt done via clicking links or searchForm
         if(this.props.history.location.pathname.length > 1) {
             //removes /search/ from pathname
@@ -44,7 +44,6 @@ class Gallery extends Component {
             <div className="photo-container">
                 <h2>Results</h2>
                 <ul>
-           
                     { this.doPhotosExist() }
                 </ul>
             </div>
